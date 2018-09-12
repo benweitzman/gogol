@@ -280,7 +280,7 @@ module Network.Google.DNS
     ) where
 
 import           Network.Google.DNS.Types
-import           Network.Google.Prelude
+import           Network.Google.Prelude hiding (ResponseHeader)
 import           Network.Google.Resource.DNS.Changes.Create
 import           Network.Google.Resource.DNS.Changes.Get
 import           Network.Google.Resource.DNS.Changes.List
