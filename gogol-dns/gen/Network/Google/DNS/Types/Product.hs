@@ -18,7 +18,7 @@
 module Network.Google.DNS.Types.Product where
 
 import           Network.Google.DNS.Types.Sum
-import           Network.Google.Prelude
+import           Network.Google.Prelude hiding (ResponseHeader)
 
 --
 -- /See:/ 'operationDNSKeyContext' smart constructor.

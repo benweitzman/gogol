@@ -117,7 +117,6 @@ module Network.Google
 import           Control.Applicative
 import           Control.Exception.Lens
 import           Control.Monad
-import           Control.Monad.Base
 import           Control.Monad.Catch
 import           Control.Monad.Reader
 import qualified Control.Monad.RWS.Lazy         as LRW
@@ -132,6 +131,7 @@ import           Control.Monad.Trans.Maybe      (MaybeT)
 import           Control.Monad.Trans.Resource
 import qualified Control.Monad.Writer.Lazy      as LW
 import qualified Control.Monad.Writer.Strict    as W
+import           Control.Monad.IO.Unlift
 import           Network.Google.Auth
 import           Network.Google.Env
 import           Network.Google.Internal.Body
@@ -155,10 +155,16 @@ newtype Google s a = Google { unGoogle :: ReaderT (Env s) (ResourceT IO) a }
         , MonadThrow
         , MonadCatch
         , MonadMask
-        , MonadBase IO
         , MonadReader (Env s)
         , MonadResource
         )
+
+
+instance MonadUnliftIO (Google s) where
+  askUnliftIO = do
+    env <- ask
+    pure $ UnliftIO $ \run ->
+      runResourceT $ runReaderT (unGoogle run) env
 
 -- | Run a 'Google' action using the specified environment and
 -- credentials annotated with sufficient authorization scopes.
@@ -182,12 +188,6 @@ class ( Functor     m
 
 instance AllowScopes s => MonadGoogle s (Google s) where
     liftGoogle = id
-
-instance MonadBaseControl IO (Google s) where
-    type StM (Google s) a = StM (ReaderT (Env s) (ResourceT IO)) a
-
-    liftBaseWith f = Google $ liftBaseWith $ \g -> f (g . unGoogle)
-    restoreM       = Google . restoreM
 
 instance MonadGoogle s m => MonadGoogle s (IdentityT m) where
     liftGoogle = lift . liftGoogle

@@ -227,7 +227,7 @@ module Network.Google.DNS.Types
 
 import           Network.Google.DNS.Types.Product
 import           Network.Google.DNS.Types.Sum
-import           Network.Google.Prelude
+import           Network.Google.Prelude hiding (ResponseHeader)
 
 -- | Default request referring to version 'v2beta1' of the Google Cloud DNS API. This contains the host and root path used as a starting point for constructing service requests.
 dNSService :: ServiceConfig
