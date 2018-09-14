@@ -22,6 +22,7 @@ module Network.Google.Auth
     , getApplicationDefault
     , fromWellKnownPath
     , fromFilePath
+    , fromJSONCredentials
     , saveAuthorizedUserToWellKnownPath
     , saveAuthorizedUser
 
