@@ -303,6 +303,13 @@ data Request = Request
     , _rqBody    :: ![Body]
     }
 
+instance Semigroup Request where
+  a <> b = Request
+        (_rqPath    a <> "/" <> _rqPath b)
+        (_rqQuery   a <> _rqQuery b)
+        (_rqHeaders a <> _rqHeaders b)
+        (_rqBody    b <> _rqBody a)
+
 instance Monoid Request where
     mempty      = Request mempty mempty mempty mempty
     mappend a b = Request
